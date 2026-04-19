@@ -112,20 +112,7 @@ http://localhost:3000
 
 ---
 
-## Suggested Screenshots
-
-Add screenshots in README:
-
-```txt id="tx1wvu"
-Homepage
-Shop Page
-Cart Page
-Orders Page
-Admin Dashboard
-Checkout Flow
-```
-
----
+ 
 
 ##  Security Features
 
