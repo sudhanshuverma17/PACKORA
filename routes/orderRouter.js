@@ -59,12 +59,12 @@ router.post("/place", isLoggedIn, async (req, res) => {
 
   });
 
-  // 🧾 create order (COD)
+  //  create order (COD)
   await orderModel.create({
     user: user._id,
     items: items,
     totalAmount: total,
-    status: "cod"   // 🔥 FIXED
+    status: "cod"   //  FIXED
   });
 
   // 🧹 clear cart
@@ -89,7 +89,7 @@ router.get("/orders/:id", isLoggedIn, async (req, res) => {
   });
 });
 
-// 📦 VIEW ORDERS
+//  VIEW ORDERS
 router.get("/orders", isLoggedIn, async (req, res) => {
   let orders = await orderModel.find({ user: req.user._id }).sort({ createdAt: -1 });
 
