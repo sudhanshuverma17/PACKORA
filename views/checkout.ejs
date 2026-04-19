@@ -42,7 +42,7 @@
 <script>
 document.getElementById("payBtn").addEventListener("click", async () => {
 
-    console.log("CLICK WORKING");
+     
 
     const res = await fetch('/create-order', {
         method: 'POST',
@@ -56,8 +56,6 @@ document.getElementById("payBtn").addEventListener("click", async () => {
     }
 
     const order = await res.json();
-
-    console.log("ORDER:", order);
 
     const options = {
         key: "<%= key_Id %>", 
