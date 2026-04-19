@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PACKORA</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="font-['helvetica_now_display'] bg-zinc-50">
+
+<% const path = typeof currentPath !== "undefined" ? currentPath : "" %>
+
+<nav class="w-full bg-white shadow sticky top-0 z-50">
+
+    <div class="max-w-7xl mx-auto px-4 md:px-8 py-4 flex justify-between items-center">
+
+        <!-- LOGO -->
+        <a href="/shop"
+           class="text-2xl font-bold tracking-wide hover:text-blue-500 transition">
+           PACKORA
+        </a>
+
+        <!-- DESKTOP MENU -->
+        <% if(typeof loggedin !== 'undefined' && loggedin && user){ %>
+
+        <div class="hidden md:flex gap-6 items-center text-sm font-medium">
+
+            <a href="/shop"
+               class="hover:text-blue-500 transition <%= path === '/shop' ? 'text-blue-600 border-b-2 border-blue-500 pb-1' : '' %>">
+               Shop
+            </a>
+
+            <a href="/cart"
+               class="hover:text-blue-500 transition <%= path === '/cart' ? 'text-blue-600 border-b-2 border-blue-500 pb-1' : '' %>">
+               Cart
+            </a>
+
+            <a href="/orders"
+               class="hover:text-blue-500 transition <%= path === '/orders' ? 'text-blue-600 border-b-2 border-blue-500 pb-1' : '' %>">
+               Orders
+            </a>
+
+            <% if(user.role === "admin"){ %>
+                <a href="/owners/admin"
+                   class="hover:text-blue-500 transition <%= path.includes('/owners') ? 'text-blue-600 border-b-2 border-blue-500 pb-1' : '' %>">
+                   Admin
+                </a>
+            <% } %>
+
+            <a href="/users/logout"
+               class="text-red-500 hover:text-red-600 transition">
+               Logout
+            </a>
+
+        </div>
+
+        <!-- MOBILE MENU BUTTON -->
+        <button onclick="toggleMenu()" class="md:hidden text-2xl">
+            <i class="ri-menu-line"></i>
+        </button>
+
+        <% } else { %>
+
+        <a href="/" class="text-sm font-medium hover:text-blue-500 transition">
+            Login
+        </a>
+
+        <% } %>
+
+    </div>
+
+    <!-- MOBILE MENU -->
+    <% if(typeof loggedin !== 'undefined' && loggedin && user){ %>
+
+    <div id="mobileMenu"
+         class="hidden md:hidden px-4 pb-4 bg-white border-t">
+
+        <div class="flex flex-col gap-4 text-sm font-medium pt-4">
+
+            <a href="/shop"
+               class="<%= path === '/shop' ? 'text-blue-600 font-semibold' : '' %>">
+               Shop
+            </a>
+
+            <a href="/cart"
+               class="<%= path === '/cart' ? 'text-blue-600 font-semibold' : '' %>">
+               Cart
+            </a>
+
+            <a href="/orders"
+               class="<%= path === '/orders' ? 'text-blue-600 font-semibold' : '' %>">
+               Orders
+            </a>
+
+            <% if(user.role === "admin"){ %>
+                <a href="/owners/admin"
+                   class="<%= path.includes('/owners') ? 'text-blue-600 font-semibold' : '' %>">
+                   Admin
+                </a>
+            <% } %>
+
+            <a href="/users/logout" class="text-red-500">
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
+    <% } %>
+
+</nav>
+
+<script>
+function toggleMenu(){
+    const menu = document.getElementById("mobileMenu");
+
+    if(menu.classList.contains("hidden")){
+        menu.classList.remove("hidden");
+    } else {
+        menu.classList.add("hidden");
+    }
+}
+</script>
+

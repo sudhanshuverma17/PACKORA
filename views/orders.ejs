@@ -1,0 +1,116 @@
+
+<%- include('./partials/header') %>
+
+<div class="w-full min-h-screen px-4 md:px-8 lg:px-16 py-8">
+
+    <h2 class="text-3xl font-bold mb-8">My Orders</h2>
+
+    <% if(orders.length === 0){ %>
+
+        <div class="bg-white rounded-2xl shadow p-10 text-center">
+
+            <h3 class="text-xl font-semibold mb-2">No orders yet</h3>
+
+            <p class="text-gray-500 mb-6">
+                Looks like you haven’t placed any orders yet.
+            </p>
+
+            <a href="/shop"
+               class="inline-block bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl transition">
+               Start Shopping
+            </a>
+
+        </div>
+
+    <% } %>
+
+    <% orders.forEach(order => { %>
+
+    <a href="/orders/<%= order._id %>"
+       class="block bg-white rounded-2xl shadow hover:shadow-xl transition p-5 md:p-6 mb-6">
+
+        <!-- HEADER -->
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-5">
+
+            <div>
+                <p class="text-sm text-gray-500">Order ID</p>
+                <p class="font-semibold break-all text-sm md:text-base">
+                    <%= order._id %>
+                </p>
+            </div>
+
+            <div class="sm:text-right">
+                <p class="text-sm text-gray-500 mb-1">Status</p>
+
+                <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold
+                <%= order.status === 'paid'
+                    ? 'bg-green-100 text-green-700'
+                    : 'bg-yellow-100 text-yellow-700' %>">
+
+                    <%= order.status === 'paid'
+                        ? 'Paid'
+                        : 'Cash on Delivery' %>
+
+                </span>
+            </div>
+
+        </div>
+
+        <!-- ITEMS -->
+        <div class="space-y-3 mb-5">
+
+            <% if(order.items && order.items.length > 0){ %>
+
+                <% order.items.slice(0,2).forEach(item => { %>
+
+                <div class="flex justify-between gap-4 text-sm">
+
+                    <span class="truncate">
+                        <%= item.product?.name %> (x<%= item.quantity %>)
+                    </span>
+
+                    <span class="font-medium whitespace-nowrap">
+                        ₹ <%= (Number(item.product?.price || 0) - Number(item.product?.discount || 0)) * item.quantity %>
+                    </span>
+
+                </div>
+
+                <% }) %>
+
+                <% if(order.items.length > 2){ %>
+
+                <p class="text-xs text-gray-500">
+                    +<%= order.items.length - 2 %> more items
+                </p>
+
+                <% } %>
+
+            <% } else { %>
+
+                <p class="text-gray-400 text-sm">No items found</p>
+
+            <% } %>
+
+        </div>
+
+        <!-- FOOTER -->
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 border-t pt-4">
+
+            <p class="text-lg font-bold">
+                Total: ₹ <%= order.totalAmount %>
+            </p>
+
+            <span class="text-blue-500 font-medium">
+                View Details →
+            </span>
+
+        </div>
+
+    </a>
+
+    <% }) %>
+
+</div>
+
+<%- include('./partials/footer') %>
+

@@ -1,0 +1,90 @@
+<%- include('./partials/header') %>
+
+<div class="px-20 py-10">
+
+    <h2 class="text-2xl mb-6">Checkout</h2>
+
+    <% user.cart.forEach(item => { %>
+        <div class="flex justify-between mb-3">
+            <span><%= item.product.name %> (x<%= item.quantity %>)</span>
+            <span>₹ <%= (item.product.price - item.product.discount) * item.quantity %></span>
+        </div>
+    <% }) %>
+
+    <div class="border-t pt-4 mt-4">
+        <h3 class="text-xl font-bold">Total: ₹ <%= total %></h3>
+    </div>
+
+    <div class="px-20 py-10">
+
+     
+ 
+    <form action="/place" method="post" class="mt-6">
+    <button 
+        class="bg-green-500 text-white block mb-4 px-5 py-2 h-[40px] w-[300px] rounded ">
+        Cash on Delivery
+    </button>
+    <button id="payBtn" type="button" class="bg-blue-500 text-white h-[40px] w-[300px] px-5 py-2 rounded">
+        Pay Online
+</button>
+</form>
+
+  
+
+</div>
+
+</div>
+
+ 
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+document.getElementById("payBtn").addEventListener("click", async () => {
+
+    console.log("CLICK WORKING");
+
+    const res = await fetch('/create-order', {
+        method: 'POST',
+        credentials: 'include'
+    });
+
+    if (!res.ok) {
+        const text = await res.text();
+        console.log("ERROR RESPONSE:", text);
+        return;
+    }
+
+    const order = await res.json();
+
+    console.log("ORDER:", order);
+
+    const options = {
+        key: "<%= key_Id %>", 
+        amount: order.amount,
+        currency: "INR",
+        order_id: order.id,
+
+        handler: async function (response) {
+
+            const res = await fetch('/verify-payment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(response)
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                window.location.href = "/orders";
+            } else {
+                alert("Payment verification failed");
+            }
+        }
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.open();
+});
+</script>
+<%- include('./partials/footer') %>

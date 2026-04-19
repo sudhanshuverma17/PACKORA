@@ -1,0 +1,128 @@
+<%- include('./partials/header') %>
+
+<!-- FLASH -->
+<% if(success && success.length > 0){ %>
+<div id="flashMsg"
+class="fixed top-5 left-1/2 -translate-x-1/2 bg-blue-500 text-white px-6 py-3 rounded-xl shadow-lg z-50">
+    <%= success[0] %>
+</div>
+<% } %>
+
+<!-- FILTER TEXT -->
+<% if(query.minPrice || query.sort || query.discount || query.stock || query.filter){ %>
+<p class="text-sm text-gray-500 px-4 md:px-8 pt-4">
+    Filters applied
+</p>
+<% } %>
+
+<!-- MAIN -->
+<div class="w-full min-h-screen flex flex-col lg:flex-row gap-8 px-4 md:px-8 lg:px-16 py-8">
+
+    <!-- SIDEBAR -->
+    <div class="w-full lg:w-1/5 bg-white rounded-2xl shadow p-5 h-fit">
+
+        <h2 class="text-xl font-bold mb-5">Filters</h2>
+
+        <!-- SORT -->
+        <p class="text-sm font-semibold mb-2">Sort By</p>
+
+        <select onchange="location=this.value"
+            class="w-full border rounded-lg px-3 py-2 mb-6">
+
+            <option value="/shop">Popular</option>
+            <option value="/shop?sort=low-high">Price: Low → High</option>
+            <option value="/shop?sort=high-low">Price: High → Low</option>
+
+        </select>
+
+        <!-- COLLECTION -->
+        <p class="text-sm font-semibold mb-2">Collection</p>
+
+        <div class="flex flex-col gap-2 text-sm mb-6">
+            <a href="/shop" class="hover:text-blue-500 transition">All Products</a>
+            <a href="/shop?filter=new" class="hover:text-blue-500 transition">New Collection</a>
+            <a href="/shop?discount=true" class="hover:text-blue-500 transition">Discounted</a>
+        </div>
+
+        <!-- PRICE -->
+        <p class="text-sm font-semibold mb-2">Price Range</p>
+
+        <div class="flex flex-col gap-2 text-sm mb-6">
+            <a href="/shop?minPrice=0&maxPrice=500" class="hover:text-blue-500 transition">Under ₹500</a>
+            <a href="/shop?minPrice=500&maxPrice=1000" class="hover:text-blue-500 transition">₹500 - ₹1000</a>
+            <a href="/shop?minPrice=1000" class="hover:text-blue-500 transition">Above ₹1000</a>
+        </div>
+
+        <!-- OTHER -->
+        <p class="text-sm font-semibold mb-2">Other</p>
+
+        <div class="flex flex-col gap-2 text-sm">
+            <a href="/shop?stock=available" class="hover:text-blue-500 transition">In Stock</a>
+            <a href="/shop?discount=true" class="hover:text-blue-500 transition">Discount</a>
+        </div>
+
+    </div>
+
+    <!-- PRODUCTS -->
+    <div class="w-full lg:w-4/5">
+
+        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
+
+            <% products.forEach(function(product){ %>
+
+            <div class="bg-white rounded-2xl overflow-hidden shadow hover:shadow-xl transition duration-300">
+
+                <!-- IMAGE -->
+                <div
+                    class="h-44 md:h-52 flex items-center justify-center"
+                    style="background-color:<%= product.bgcolor %>">
+
+                    <img
+                        class="h-28 md:h-32 object-contain hover:scale-105 transition"
+                        src="data:image/jpeg;base64,<%= product.image.toString('base64') %>">
+
+                </div>
+
+                <!-- DETAILS -->
+                <div
+                    class="p-4"
+                    style="background-color:<%= product.panelcolor %>; color:<%= product.textcolor %>">
+
+                    <h3 class="font-semibold text-base md:text-lg truncate">
+                        <%= product.name %>
+                    </h3>
+
+                    <p class="mt-1 font-medium">
+                        ₹ <%= product.price %>
+                    </p>
+
+                    <a href="/addtocart/<%= product._id %>"
+                       class="mt-4 block text-center bg-white text-black py-2 rounded-lg hover:bg-zinc-100 transition">
+                        Add to Cart
+                    </a>
+
+                </div>
+
+            </div>
+
+            <% }) %>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+setTimeout(() => {
+    const msg = document.getElementById("flashMsg");
+    if(msg){
+        msg.style.transition = "0.5s";
+        msg.style.opacity = "0";
+        setTimeout(() => msg.remove(), 500);
+    }
+}, 2500);
+</script>
+
+<%- include('./partials/footer') %>
+

@@ -1,0 +1,32 @@
+<%- include('./partials/header') %>
+
+<div class="px-20 py-10">
+
+    <h2 class="text-2xl mb-6">Edit Product</h2>
+
+    <form action="/products/edit/<%= product._id %>" method="POST" enctype="multipart/form-data">
+
+        <input type="text" name="name" value="<%= product.name %>" 
+            class="border p-2 w-full mb-3">
+
+        <input type="number" name="price" value="<%= product.price %>" 
+            class="border p-2 w-full mb-3">
+
+        <input type="number" name="discount" value="<%= product.discount %>" 
+            class="border p-2 w-full mb-3">
+
+        <input type="file" name="image" class="mb-3">
+
+        <input type="color" name="bgcolor" value="<%= product.bgcolor %>" class="w-full h-10 mb-3">
+        <input type="color" name="panelcolor" value="<%= product.panelcolor %>" class="w-full h-10 mb-3">
+        <input type="color" name="textcolor" value="<%= product.textcolor %>" class="w-full h-10 mb-3">
+
+        <button class="bg-green-500 text-white px-5 py-2 rounded">
+            Update Product
+        </button>
+
+    </form>
+
+</div>
+
+<%- include('./partials/footer') %>

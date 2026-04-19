@@ -1,0 +1,111 @@
+
+<%- include('./partials/header') %>
+
+<div class="w-full min-h-screen px-4 md:px-8 lg:px-16 py-8">
+
+    <h2 class="text-3xl font-bold mb-8">Order Details</h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        <!-- LEFT SECTION -->
+        <div class="lg:col-span-2">
+
+            <!-- ORDER INFO -->
+            <div class="bg-white rounded-2xl shadow p-6 mb-6">
+
+                <h3 class="text-xl font-semibold mb-4">Order Information</h3>
+
+                <div class="space-y-3 text-sm md:text-base">
+
+                    <p>
+                        <span class="font-semibold">Order ID:</span><br>
+                        <span class="text-gray-600 break-all"><%= order._id %></span>
+                    </p>
+
+                    <p>
+                        <span class="font-semibold">Status:</span>
+                        <span class="text-green-600 font-medium">
+                            <%= order.status %>
+                        </span>
+                    </p>
+
+                    <p>
+                        <span class="font-semibold">Date:</span>
+                        <%= order.createdAt.toDateString() %>
+                    </p>
+
+                </div>
+
+            </div>
+
+            <!-- ITEMS -->
+            <div class="bg-white rounded-2xl shadow p-6">
+
+                <h3 class="text-xl font-semibold mb-5">Items</h3>
+
+                <% if(order.items && order.items.length > 0){ %>
+
+                    <% order.items.forEach(item => { %>
+
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 py-4 border-b last:border-none">
+
+                        <div>
+                            <p class="font-medium">
+                                <%= item.product?.name || "Product" %>
+                            </p>
+
+                            <p class="text-sm text-gray-500">
+                                Quantity: <%= item.quantity %>
+                            </p>
+                        </div>
+
+                        <div class="font-semibold">
+                            ₹ <%= (Number(item.product?.price || 0) - Number(item.product?.discount || 0)) * item.quantity %>
+                        </div>
+
+                    </div>
+
+                    <% }) %>
+
+                <% } else { %>
+
+                    <p class="text-gray-400">No items found in this order.</p>
+
+                <% } %>
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT SECTION -->
+        <div>
+
+            <div class="bg-white rounded-2xl shadow p-6 lg:sticky lg:top-24">
+
+                <h3 class="text-2xl font-bold mb-6">Summary</h3>
+
+                <div class="flex justify-between mb-4">
+                    <span>Total Items</span>
+                    <span><%= order.items ? order.items.length : 0 %></span>
+                </div>
+
+                <div class="flex justify-between text-lg font-semibold border-t pt-4">
+                    <span>Total Amount</span>
+                    <span>₹ <%= order.totalAmount %></span>
+                </div>
+
+                <a href="/shop"
+                   class="block text-center mt-6 bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-xl transition">
+                   Continue Shopping
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<%- include('./partials/footer') %>
+
