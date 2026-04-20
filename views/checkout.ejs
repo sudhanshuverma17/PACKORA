@@ -36,53 +36,82 @@
 </div>
 
  
-
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
 document.getElementById("payBtn").addEventListener("click", async () => {
 
-     
+    try {
 
-    const res = await fetch('/create-order', {
-        method: 'POST',
-        credentials: 'include'
-    });
+        const res = await fetch('/create-order', {
+            method: 'POST',
+            credentials: 'include'
+        });
 
-    if (!res.ok) {
-        const text = await res.text();
-        console.log("ERROR RESPONSE:", text);
-        return;
+        if (!res.ok) {
+            const text = await res.text();
+            console.log("ERROR RESPONSE:", text);
+            return;
+        }
+
+        const order = await res.json();
+
+        const options = {
+            key: "<%= key_Id %>",    
+            amount: order.amount,
+            currency: "INR",
+            name: "PACKORA",
+            description: "Secure Checkout",
+            order_id: order.id,
+
+            prefill: {
+                name: "<%= user?.fullname || 'Customer' %>",
+                email: "<%= user?.email || '' %>",
+                contact: "9876543210"
+            },
+
+            notes: {
+                store: "SCATCH"
+            },
+
+            theme: {
+                color: "#111827"
+            },
+
+            handler: async function (response) {
+
+                const verifyRes = await fetch('/verify-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(response)
+                });
+
+                const data = await verifyRes.json();
+
+                if (data.success) {
+                    window.location.href = "/orders";
+                } else {
+                    alert("Payment verification failed");
+                }
+            },
+
+            modal: {
+                ondismiss: function () {
+                    console.log("Checkout closed");
+                }
+            }
+        };
+
+        const rzp = new Razorpay(options);
+
+        setTimeout(() => {
+            rzp.open();
+        }, 200);
+
+    } catch (err) {
+        console.error("Payment Error:", err);
     }
 
-    const order = await res.json();
-
-    const options = {
-        key: "<%= key_Id %>", 
-        amount: order.amount,
-        currency: "INR",
-        order_id: order.id,
-
-        handler: async function (response) {
-
-            const res = await fetch('/verify-payment', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(response)
-            });
-
-            const data = await res.json();
-
-            if (data.success) {
-                window.location.href = "/orders";
-            } else {
-                alert("Payment verification failed");
-            }
-        }
-    };
-
-    const rzp = new Razorpay(options);
-    rzp.open();
 });
 </script>
 <%- include('./partials/footer') %>
