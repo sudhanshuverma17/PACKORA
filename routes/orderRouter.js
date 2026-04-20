@@ -97,24 +97,34 @@ router.get("/orders", isLoggedIn, async (req, res) => {
 });
 
 router.post("/create-order", isLoggedIn, async (req, res) => {
-  let user = await userModel.findById(req.user._id).populate("cart.product");
+  try {
+    const user = await userModel
+      .findById(req.user._id)
+      .populate("cart.product");
 
-  let total = 0;
+    let total = 0;
 
-  user.cart.forEach((item) => {
-    total += (item.product.price - item.product.discount) * item.quantity;
-  });
+    user.cart.forEach((item) => {
+      total += (item.product.price - item.product.discount) * item.quantity;
+    });
 
-  const options = {
-    amount: total * 100, 
-    currency: "INR",
-    receipt: "order_rcptid_" + Date.now(),
-  };
+    const options = {
+      amount: total * 100,
+      currency: "INR",
+      receipt: "order_" + Date.now(),
+    };
 
-  const order = await razorpay.orders.create(options);
-    
+    const order = await razorpay.orders.create(options);
 
-  return res.json(order );
+    return res.json(order);
+
+  } catch (err) {
+    console.error("CREATE ORDER ERROR:", err);
+    return res.status(500).json({
+      success: false,
+      message: err.message
+    });
+  }
 });
 
 
