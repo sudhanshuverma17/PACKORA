@@ -6,6 +6,7 @@ const userModel = require("../models/user-model");
 const orderModel = require("../models/order-model");
 const razorpay = require("../config/razorpay");
 const crypto = require("crypto");
+const instance = require("../config/razorpay");
 
  
 router.get("/checkout", isLoggedIn, async (req, res) => {
@@ -20,7 +21,7 @@ router.get("/checkout", isLoggedIn, async (req, res) => {
     total += (item.product.price - item.product.discount) * item.quantity;
   });
 
-  res.render("checkout", { user, total, loggedin: true, key_Id: instance.key_id });
+  res.render("checkout", { user, total, loggedin: true, key_Id:instance.key_id });
 });
 
  
@@ -39,7 +40,7 @@ router.post("/place", isLoggedIn, async (req, res) => {
 
   user.cart.forEach((item) => {
 
-    if (!item.product) return;  
+    if (!item.product) return; // 🔥 safety
 
     let product = item.product;
 
@@ -59,12 +60,12 @@ router.post("/place", isLoggedIn, async (req, res) => {
 
   });
 
-  //  create order (COD)
+  // 🧾 create order (COD)
   await orderModel.create({
     user: user._id,
     items: items,
     totalAmount: total,
-    status: "cod"   //  FIXED
+    status: "cod"   // 🔥 FIXED
   });
 
   // 🧹 clear cart
@@ -89,7 +90,6 @@ router.get("/orders/:id", isLoggedIn, async (req, res) => {
   });
 });
 
-//  VIEW ORDERS
 router.get("/orders", isLoggedIn, async (req, res) => {
   let orders = await orderModel.find({ user: req.user._id }).sort({ createdAt: -1 });
 
@@ -106,14 +106,15 @@ router.post("/create-order", isLoggedIn, async (req, res) => {
   });
 
   const options = {
-    amount: total * 100, // paise
+    amount: total * 100, 
     currency: "INR",
     receipt: "order_rcptid_" + Date.now(),
   };
 
   const order = await razorpay.orders.create(options);
+    
 
-  res.json(order);
+  return res.json(order );
 });
 
 
@@ -183,7 +184,7 @@ router.post("/verify-payment", isLoggedIn, async (req, res) => {
 
   } catch (err) {
     console.log(err);
-    returnres.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 });
 
