@@ -20,7 +20,7 @@ router.get("/checkout", isLoggedIn, async (req, res) => {
     total += (item.product.price - item.product.discount) * item.quantity;
   });
 
-  res.render("checkout", { user, total, loggedin: true,key_Id: process.env.RAZORPAY_KEY_ID });
+  res.render("checkout", { user, total, loggedin: true,key_Id: instance.key_id });
 });
 
  
@@ -39,7 +39,7 @@ router.post("/place", isLoggedIn, async (req, res) => {
 
   user.cart.forEach((item) => {
 
-    if (!item.product) return; // 🔥 safety
+    if (!item.product) return;  
 
     let product = item.product;
 
@@ -125,7 +125,7 @@ router.post("/verify-payment", isLoggedIn, async (req, res) => {
       razorpay_signature,
     } = req.body;
 
-    const secret = process.env.RAZORPAY_KEY_SECRET;
+    const secret = instance.key_secret;
 
     const generated_signature = crypto
       .createHmac("sha256", secret)
