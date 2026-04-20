@@ -20,7 +20,7 @@ router.get("/checkout", isLoggedIn, async (req, res) => {
     total += (item.product.price - item.product.discount) * item.quantity;
   });
 
-  res.render("checkout", { user, total, loggedin: true,key_Id: instance.key_id });
+  res.render("checkout", { user, total, loggedin: true, key_Id: instance.key_id });
 });
 
  
