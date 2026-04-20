@@ -1,145 +1,50 @@
- 
 <%- include('./partials/header') %>
 
-<!-- FLASH MESSAGES -->
-<% if(success && success.length > 0){ %>
-<div id="flashMsg"
-class="fixed top-5 left-1/2 -translate-x-1/2 bg-green-100 text-green-700 px-6 py-3 rounded-xl shadow z-50">
-    <%= success[0] %>
-</div>
-<% } %>
+<div class="w-full min-h-screen flex items-center justify-center px-4 py-10">
 
-<% if(error && error.length > 0){ %>
-<div id="flashMsg"
-class="fixed top-5 left-1/2 -translate-x-1/2 bg-red-100 text-red-700 px-6 py-3 rounded-xl shadow z-50">
-    <%= error[0] %>
-</div>
-<% } %>
+    <div class="w-full max-w-md bg-white shadow-2xl rounded-2xl p-8">
 
-<% if(logout){ %>
-<div id="flashMsg"
-class="fixed top-5 left-1/2 -translate-x-1/2 bg-green-100 text-green-700 px-6 py-3 rounded-xl shadow z-50">
-    Logged out successfully
-</div>
-<% } %>
+        <h2 class="text-3xl font-bold text-center mb-2">
+            Login to <span class="text-blue-500">PACKORA</span>
+        </h2>
 
-<!-- MAIN -->
-<div class="w-full min-h-screen flex flex-col lg:flex-row px-4 md:px-10 lg:px-20 py-10 gap-8">
+        <p class="text-gray-500 text-center mb-6">
+            Welcome back
+        </p>
 
-    <!-- REGISTER -->
-    <div class="w-full lg:w-1/2 flex items-center justify-center">
-        <div class="w-full max-w-md bg-white shadow rounded-2xl p-8">
+        <form action="/users/login" method="POST" class="space-y-4">
 
-            <h3 class="text-3xl font-bold mb-2">
-                Welcome to <span class="text-blue-500">PACKORA</span>
-            </h3>
+            <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                class="w-full bg-zinc-100 px-4 py-3 rounded-lg border"
+                required
+            >
 
-            <p class="text-gray-500 mb-6">Create your account</p>
+            <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                class="w-full bg-zinc-100 px-4 py-3 rounded-lg border"
+                required
+            >
 
-            <form autocomplete="off" action="/users/register" method="POST" class="space-y-4">
+            <button class="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg">
+                Login
+            </button>
 
-                <input
-                    class="bg-zinc-100 w-full px-4 py-3 rounded-lg border border-zinc-200"
-                    type="text"
-                    placeholder="Full Name"
-                    name="fullname"
-                    required
-                >
+        </form>
 
-                <input
-                    class="bg-zinc-100 w-full px-4 py-3 rounded-lg border border-zinc-200"
-                    type="email"
-                    placeholder="Email"
-                    name="email"
-                    required
-                >
+        <p class="text-center mt-6 text-sm">
+            Don’t have an account?
+            <a href="/users/signup" class="text-blue-500 font-semibold hover:underline">
+                Sign Up
+            </a>
+        </p>
 
-                <input
-                    class="bg-zinc-100 w-full px-4 py-3 rounded-lg border border-zinc-200"
-                    type="password"
-                    placeholder="Password"
-                    name="password"
-                    required
-                >
-
-                <button
-                    class="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg transition">
-                    Create Account
-                </button>
-
-            </form>
-
-        </div>
-    </div>
-
-    <!-- LOGIN -->
-    <div class="w-full lg:w-1/2 flex items-center justify-center">
-        <div class="w-full max-w-md bg-white shadow rounded-2xl p-8">
-
-            <h3 class="text-3xl font-bold mb-2">Login</h3>
-            <p class="text-gray-500 mb-6">Access your account</p>
-
-            <form autocomplete="off" action="/users/login" method="POST" class="space-y-4">
-
-                <input
-                    class="bg-zinc-100 w-full px-4 py-3 rounded-lg border border-zinc-200"
-                    type="email"
-                    placeholder="Email"
-                    name="email"
-                    required
-                >
-
-                <div class="relative">
-
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        placeholder="Password"
-                        class="bg-zinc-100 w-full px-4 py-3 rounded-lg border border-zinc-200 pr-12"
-                        required
-                    >
-
-                    <button
-                        type="button"
-                        onclick="togglePassword()"
-                        class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">
-                        👁
-                    </button>
-
-                </div>
-
-                <button
-                    class="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg transition">
-                    Login
-                </button>
-
-                <a href="/users/forgot-password"
-                   class="block text-center w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg transition">
-                   Forgot Password?
-                </a>
-
-            </form>
-
-        </div>
     </div>
 
 </div>
-
-<script>
-function togglePassword() {
-    const password = document.getElementById("password");
-    password.type = password.type === "password" ? "text" : "password";
-}
-
-setTimeout(() => {
-    const msg = document.getElementById("flashMsg");
-    if(msg){
-        msg.style.transition = "0.5s";
-        msg.style.opacity = "0";
-        setTimeout(() => msg.remove(), 500);
-    }
-}, 3000);
-</script>
 
 <%- include('./partials/footer') %>
