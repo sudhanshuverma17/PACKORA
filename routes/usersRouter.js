@@ -18,6 +18,13 @@ router.get('/logout', (req, res) => {
     });
 });
 
+router.get('/signup', (req, res) => {
+     return res.status(200).render('signUp', {
+        success: req.flash("success"),
+        error: req.flash("error")
+    });
+});
+
 router.get("/forgot-password", (req, res) => {
 
     let error = req.flash("error");
